@@ -417,7 +417,7 @@ class AppTheme {
           borderRadius: BorderRadius.circular(12),
         ),
         behavior: SnackBarBehavior.floating,
-        padding: const EdgeInsets.all(16),
+        insetPadding: const EdgeInsets.all(16),
       ),
       
       tabBarTheme: TabBarThemeData(
