@@ -192,7 +192,6 @@ class AppTheme {
       
       bottomNavigationBarTheme: BottomNavigationBarThemeData(
         elevation: 8,
-        surfaceTintColor: Colors.transparent,
         backgroundColor: surfaceColor,
         selectedItemColor: primaryColor,
         unselectedItemColor: onSurfaceVariantColor,
@@ -391,7 +390,6 @@ class AppTheme {
           fontWeight: FontWeight.w700,
         ),
         contentTextStyle: textTheme.bodyMedium,
-        actionsAlignment: MainAxisAlignment.end,
       ),
       
       bottomSheetTheme: BottomSheetThemeData(
@@ -410,7 +408,6 @@ class AppTheme {
       
       snackBarTheme: SnackBarThemeData(
         elevation: 8,
-        surfaceTintColor: Colors.transparent,
         backgroundColor: onBackgroundColor,
         contentTextStyle: textTheme.bodyMedium?.copyWith(
           color: surfaceColor,
@@ -420,7 +417,7 @@ class AppTheme {
           borderRadius: BorderRadius.circular(12),
         ),
         behavior: SnackBarBehavior.floating,
-        padding: const EdgeInsets.all(16),
+        insetPadding: const EdgeInsets.all(16),
       ),
       
       tabBarTheme: TabBarThemeData(
@@ -463,7 +460,6 @@ class AppTheme {
       
       floatingActionButtonTheme: FloatingActionButtonThemeData(
         elevation: 4,
-        surfaceTintColor: Colors.transparent,
         backgroundColor: primaryColor,
         foregroundColor: onPrimaryColor,
         shape: RoundedRectangleBorder(
@@ -587,20 +583,20 @@ class AppTheme {
       
       timePickerTheme: TimePickerThemeData(
         backgroundColor: surfaceColor,
-        hourMinuteTextColor: WidgetStateProperty.resolveWith((states) {
+        hourMinuteTextColor: WidgetStateColor.resolveWith((states) {
           if (states.contains(WidgetState.selected)) {
             return onPrimaryColor;
           }
           return onBackgroundColor;
         }),
-        hourMinuteColor: WidgetStateProperty.resolveWith((states) {
+        hourMinuteColor: WidgetStateColor.resolveWith((states) {
           if (states.contains(WidgetState.selected)) {
             return primaryColor;
           }
           return Colors.transparent;
         }),
-        dayPeriodTextColor: WidgetStateProperty.all(onBackgroundColor),
-        dayPeriodColor: WidgetStateProperty.all(Colors.transparent),
+        dayPeriodTextColor: onBackgroundColor,
+        dayPeriodColor: Colors.transparent,
         dialHandColor: primaryColor,
         dialBackgroundColor: primaryColor.withOpacity(0.1),
         entryModeIconColor: primaryColor,
@@ -617,7 +613,6 @@ class AppTheme {
           borderRadius: BorderRadius.circular(12),
         ),
         textStyle: textTheme.bodyMedium,
-        padding: EdgeInsets.zero,
       ),
       
       expansionTileTheme: ExpansionTileThemeData(

@@ -37,6 +37,7 @@ dependencies:
   equatable: ^2.0.5
   
   # UI Components
+  google_fonts: ^6.2.1
   flutter_screenutil: ^5.9.0
   cached_network_image: ^3.3.0
   shimmer: ^3.0.0
@@ -63,7 +64,6 @@ dependencies:
   photo_view: ^0.15.0
   
   # Payments
-  pay: ^1.1.0
   
   # Arabic Support
   easy_localization: ^3.0.3
