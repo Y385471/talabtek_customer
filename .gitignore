@@ -109,3 +109,8 @@ assets/icons/*.png
 tmp/
 temp/
 *.tmp
+# talabtek_app secrets / machine files
+talabtek_app/android/local.properties
+talabtek_app/android/key.properties
+*.jks
+**/google-services.json

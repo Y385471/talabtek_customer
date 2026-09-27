@@ -1,4 +1,4 @@
-package com.talabtek.talabtek_customer
+package com.talabtek.customer
 
 import io.flutter.embedding.android.FlutterActivity
 

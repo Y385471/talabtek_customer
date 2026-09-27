@@ -1,107 +1,78 @@
+plugins {
+    id "com.android.application"
+    id "kotlin-android"
+    // يجب أن يأتي بعد إضافات Android و Kotlin
+    id "dev.flutter.flutter-gradle-plugin"
+    id "com.google.gms.google-services"
+}
+
 def localProperties = new Properties()
 def localPropertiesFile = rootProject.file('local.properties')
 if (localPropertiesFile.exists()) {
-    localProperties.load(new FileInputStream(localPropertiesFile))
+    localPropertiesFile.withReader('UTF-8') { reader -> localProperties.load(reader) }
 }
-
-def flutterRoot = localProperties.getProperty('flutter.sdk')
-if (flutterRoot == null) {
-    throw new GradleException("Flutter SDK not found. Define location with flutter.sdk in the local.properties file.")
-}
-
 def flutterVersionCode = localProperties.getProperty('flutter.versionCode') ?: '1'
 def flutterVersionName = localProperties.getProperty('flutter.versionName') ?: '1.0.0'
 
-def keystorePropertiesFile = rootProject.file("key.properties")
+// بيانات التوقيع: من key.properties (محلياً) أو من متغيرات البيئة (GitHub Actions)
 def keystoreProperties = new Properties()
+def keystorePropertiesFile = rootProject.file('key.properties')
 if (keystorePropertiesFile.exists()) {
-    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
-} else {
-    println "WARNING: key.properties file not found at $keystorePropertiesFile"
-    ext.keyAlias = 'upload'
-    ext.keyPassword = 'talabtek123'
-    ext.storeFile = 'upload-keystore.jks'
-    ext.storePassword = 'talabtek123'
+    keystorePropertiesFile.withReader('UTF-8') { reader -> keystoreProperties.load(reader) }
 }
-
-plugins {
-    id 'com.android.application'
-    id 'org.jetbrains.kotlin.android'
-    id 'com.google.gms.google-services'
-}
+def ksFile = keystoreProperties['storeFile'] ?: System.getenv('KEYSTORE_FILE')
 
 android {
     namespace "com.talabtek.customer"
-    compileSdkVersion 34
-    ndkVersion 25
+    compileSdk 34
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
 
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = '17'
+    }
+
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
     }
 
     defaultConfig {
         applicationId "com.talabtek.customer"
         minSdkVersion 21
         targetSdkVersion 34
-        versionCode 1
-        versionName "1.0.0"
+        versionCode flutterVersionCode.toInteger()
+        versionName flutterVersionName
         multiDexEnabled true
     }
 
     signingConfigs {
         release {
-            keyAlias keystoreProperties['keyAlias'] ?: 'upload'
-            keyPassword keystoreProperties['keyPassword'] ?: 'talabtek123'
-            storeFile keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : file('upload-keystore.jks')
-            storePassword keystoreProperties['storePassword'] ?: 'talabtek123'
+            if (ksFile) {
+                storeFile rootProject.file(ksFile)
+                storePassword keystoreProperties['storePassword'] ?: System.getenv('KEYSTORE_PASSWORD')
+                keyAlias keystoreProperties['keyAlias'] ?: System.getenv('KEY_ALIAS')
+                keyPassword keystoreProperties['keyPassword'] ?: System.getenv('KEY_PASSWORD')
+            }
         }
     }
 
     buildTypes {
         release {
-            signingConfig signingConfigs.release
+            // لو لا يوجد keystore يُوقَّع بمفتاح debug حتى لا يفشل البناء
+            signingConfig ksFile ? signingConfigs.release : signingConfigs.debug
             minifyEnabled false
             shrinkResources false
         }
-        debug {
-            signingConfig signingConfigs.debug
-        }
     }
+}
 
-    buildFeatures {
-        viewBinding true
-    }
-
-    packagingOptions {
-        resources {
-            excludes += ['META-INF/*']
-        }
-    }
-
-    sourceSets {
-        main.java.srcDirs += 'src/main/kotlin'
-    }
+flutter {
+    source '../..'
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'androidx.multidex:multidex:2.0.1'
-    
-    implementation platform('com.google.firebase:firebase-bom:32.7.0')
-    implementation 'com.google.firebase:firebase-analytics-ktx'
-    implementation 'com.google.firebase:firebase-crashlytics-ktx'
-    implementation 'com.google.firebase:firebase-messaging-ktx'
-    implementation 'com.google.firebase:firebase-auth-ktx'
-    implementation 'com.google.firebase:firebase-firestore-ktx'
-    implementation 'com.google.firebase:firebase-storage-ktx'
-    
-    implementation 'com.google.android.gms:play-services-location:21.0.1'
-    implementation 'com.google.android.gms:play-services-maps:18.2.0'
 }
-
-apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
