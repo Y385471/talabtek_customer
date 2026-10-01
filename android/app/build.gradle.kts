@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.talabtek_customer"
+    namespace = "com.talabtk.order"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
